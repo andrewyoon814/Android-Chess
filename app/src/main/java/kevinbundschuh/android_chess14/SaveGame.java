@@ -6,18 +6,18 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class NewGame extends AppCompatActivity {
+public class SaveGame extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_game);
+        setContentView(R.layout.activity_save_game);
 
         Button cancel = (Button) findViewById(R.id.cancel_btn);
 
         cancel.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                startActivity(new Intent(NewGame.this, MainActivity.class));
+                startActivity(new Intent(SaveGame.this, MainActivity.class));
             }
         });
 
@@ -25,7 +25,7 @@ public class NewGame extends AppCompatActivity {
 
         cont.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                startActivity(new Intent(NewGame.this, ChessGame.class));
+                startActivity(new Intent(SaveGame.this, ChessGame.class));
             }
         });
 
