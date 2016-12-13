@@ -1,9 +1,12 @@
 package kevinbundschuh.android_chess14;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.util.Log;
+import android.view.ViewGroup;
+import android.widget.GridView;
+import android.widget.ImageButton;
 
 public class ChessGame extends AppCompatActivity {
 
@@ -11,6 +14,14 @@ public class ChessGame extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chess_game);
+
+    }
+
+    public void pieceClick(View view){
+        ImageButton clicked = (ImageButton) view;
+        Log.d("Degug msg:", "" +  getResources().getResourceEntryName(clicked.getId()));
+        Log.d("dbg msg:", view.getTag().toString());
+
     }
 
     /**
