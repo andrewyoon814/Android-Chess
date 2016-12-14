@@ -18,7 +18,7 @@ public class ChessGame extends AppCompatActivity {
 
     //requested move is filled in on click and previous move holds the information from the previous turn for the undo button.
     MoveHolder requestedMove;
-    MoveHolder previousMove = null;
+    MoveHolder previousMove;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +71,7 @@ public class ChessGame extends AppCompatActivity {
 
 
             //if validation is true... move the piece to that spot. else highlight red and put up an alert saying invalid move.
-            if(valid.equals(true)){
+            if(valid.equals("true")){
 
                 clicked.setTag(requestedMove.getPiece());
 
@@ -122,7 +122,13 @@ public class ChessGame extends AppCompatActivity {
                 prev.setBackgroundColor(Color.TRANSPARENT);
 
                 //save this current move as previous move so that you can use for undo's
-                previousMove = requestedMove;
+                previousMove = new MoveHolder();
+                previousMove.setPieceId(requestedMove.getPieceId());
+                previousMove.setPiece(requestedMove.getPiece());
+                previousMove.setToId(requestedMove.getToId());
+                previousMove.setFrom(requestedMove.getFrom());
+                previousMove.setTo(requestedMove.getTo());
+                previousMove.setClick(requestedMove.getClick());
 
                 //reset for future use
                 requestedMove.reset();
@@ -149,10 +155,12 @@ public class ChessGame extends AppCompatActivity {
      * @param view
      */
     public void undoListener(View view){
-        /**
+
         if(previousMove == null){
             Toast.makeText(getApplicationContext(),"No previous move.", Toast.LENGTH_LONG).show();
         }else{
+
+            Log.d("adf: ", previousMove.toString());
 
             ImageView start = (ImageView) findViewById(previousMove.getToId());
             ImageView end = (ImageView) findViewById(previousMove.getPieceId());
@@ -163,7 +171,48 @@ public class ChessGame extends AppCompatActivity {
 
             //image switch and reset
             start.setImageResource(R.drawable.transparent);
-        }*/
+
+            switch (previousMove.getPiece()) {
+                case "bking":
+                    end.setImageResource(R.drawable.bking);
+                    break;
+                case "bqueen":
+                    end.setImageResource(R.drawable.bqueen);
+                    break;
+                case "brook":
+                    end.setImageResource(R.drawable.brook);
+                    break;
+                case "bhorse":
+                    end.setImageResource(R.drawable.bhorse);
+                    break;
+                case "bbishop":
+                    end.setImageResource(R.drawable.bbishop);
+                    break;
+                case "bpawn":
+                    end.setImageResource(R.drawable.bpawn);
+                    break;
+                case "wqueen":
+                    end.setImageResource(R.drawable.wqueen);
+                    break;
+                case "wking":
+                    end.setImageResource(R.drawable.wking);
+                    break;
+                case "wrook":
+                    end.setImageResource(R.drawable.wrook);
+                    break;
+                case "whorse":
+                    end.setImageResource(R.drawable.whorse);
+                    break;
+                case "wpawn":
+                    end.setImageResource(R.drawable.wpawn);
+                    break;
+                case "wbishop":
+                    end.setImageResource(R.drawable.wbishop);
+                    break;
+            }
+
+            previousMove = null;
+        }
     }
 
     /**
