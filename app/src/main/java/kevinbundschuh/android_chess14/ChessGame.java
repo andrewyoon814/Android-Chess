@@ -9,6 +9,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import controller.moveValidator;
+
 import model.MoveHolder;
 
 
@@ -52,17 +54,18 @@ public class ChessGame extends AppCompatActivity {
             //this else block is reached if and only if this is the second click
             requestedMove.setTo(getResources().getResourceEntryName(clicked.getId()));
 
-            Log.d("movestate:", requestedMove.toString());
-
-            boolean valid = true;
+            boolean valid;
 
             /**
              *
              * Put move validation code here.
              * I just set valid to true for debugging purposes
              *
-             *
+             * Send the requestMove data to validator method and set valid equal to the return value
              */
+
+            valid = moveValidator.validator(requestedMove);
+
 
             //if validation is true... move the piece to that spot. else highlight red and put up an alert saying invalid move.
             if(valid == true){
