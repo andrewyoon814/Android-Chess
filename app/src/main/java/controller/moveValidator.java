@@ -8,9 +8,10 @@ import model.MoveHolder;
 
 public class moveValidator {
 
-    public static boolean validator(MoveHolder info){
+    public static String validator(MoveHolder info){
 
         System.out.println(info.toString());
-        return true;
+
+        return "true";
     }
 }

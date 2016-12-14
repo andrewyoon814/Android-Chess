@@ -16,6 +16,7 @@ public class MoveHolder {
     private String piece;
     int click;
     int pieceid;
+    int toId;
 
     /**
      * No arg constructor that creates an empty move info object
@@ -74,6 +75,14 @@ public class MoveHolder {
 
     public int getPieceId(){
         return this.pieceid;
+    }
+
+    public int getToId(){
+        return this.toId;
+    }
+
+    public void setToId(int toId){
+        this.toId = toId;
     }
 
     public void setPieceId(int pieceid){

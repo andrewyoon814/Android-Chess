@@ -18,7 +18,7 @@ public class ChessGame extends AppCompatActivity {
 
     //requested move is filled in on click and previous move holds the information from the previous turn for the undo button.
     MoveHolder requestedMove;
-    MoveHolder previousMove;
+    MoveHolder previousMove = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +54,10 @@ public class ChessGame extends AppCompatActivity {
             //this else block is reached if and only if this is the second click
             requestedMove.setTo(getResources().getResourceEntryName(clicked.getId()));
 
-            boolean valid;
+            //save the destination images id num
+            requestedMove.setToId(clicked.getId());
+
+            String valid;
 
             /**
              *
@@ -68,7 +71,7 @@ public class ChessGame extends AppCompatActivity {
 
 
             //if validation is true... move the piece to that spot. else highlight red and put up an alert saying invalid move.
-            if(valid == true){
+            if(valid.equals(true)){
 
                 clicked.setTag(requestedMove.getPiece());
 
@@ -146,7 +149,21 @@ public class ChessGame extends AppCompatActivity {
      * @param view
      */
     public void undoListener(View view){
-        Log.d("Debug Msg:", "undo button pressed");
+        /**
+        if(previousMove == null){
+            Toast.makeText(getApplicationContext(),"No previous move.", Toast.LENGTH_LONG).show();
+        }else{
+
+            ImageView start = (ImageView) findViewById(previousMove.getToId());
+            ImageView end = (ImageView) findViewById(previousMove.getPieceId());
+
+            //tag switch and reset
+            end.setTag(start.getTag());
+            start.setTag("empty");
+
+            //image switch and reset
+            start.setImageResource(R.drawable.transparent);
+        }*/
     }
 
     /**
