@@ -17,7 +17,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/undo_btn"
         android:layout_alignParentStart="true"
-        android:onClick="undoListener" />
+        android:onClick="undoListener"
+        />
 
     <Button
         android:text="Draw"
@@ -26,7 +27,8 @@
         android:id="@+id/resign_btn"
         android:layout_below="@+id/undo_btn"
         android:layout_alignParentStart="true"
-        android:onClick="drawListener" />
+        android:onClick="drawListener"
+        />
 
     <Button
         android:text="AI Help"
@@ -35,22 +37,14 @@
         android:id="@+id/ai_btn"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:onClick="aiListener" />
-
-    <Button
-        android:text="Resign"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/exit_btn"
-        android:layout_below="@+id/ai_btn"
-        android:layout_alignParentEnd="true"
-        android:onClick="resignListener" />
+        android:onClick="aiListener"
+        />
 
     <TextView
         android:text="White Turn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/textView2"
+        android:id="@+id/turnView"
         android:layout_alignBaseline="@+id/resign_btn"
         android:layout_alignBottom="@+id/resign_btn"
         android:layout_centerHorizontal="true"
@@ -67,7 +61,7 @@
         android:textSize="18sp"
         android:layout_alignBaseline="@+id/ai_btn"
         android:layout_alignBottom="@+id/ai_btn"
-        android:layout_alignStart="@+id/textView2"
+        android:layout_alignStart="@+id/turnView"
         android:textStyle="normal|bold"
         android:textAlignment="textStart"
         android:textColor="?android:attr/actionMenuTextColor" />
@@ -859,6 +853,15 @@
             android:tag="wrook"/>
 
     </GridLayout>
+
+    <Button
+        android:text="Resign"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/exit_btn"
+        android:onClick="resignListener"
+        android:layout_below="@+id/ai_btn"
+        android:layout_alignParentEnd="true" />
 
 
 </RelativeLayout>

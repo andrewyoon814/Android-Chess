@@ -14,6 +14,7 @@ public class MoveHolder {
     private String from;
     private String to;
     private String piece;
+    private String toTag;
     int click;
     int pieceid;
     int toId;
@@ -80,6 +81,10 @@ public class MoveHolder {
     public int getToId(){
         return this.toId;
     }
+
+    public String getToTag(){return this.toTag; }
+
+    public void setToTag(String toTag){this.toTag = toTag;}
 
     public void setToId(int toId){
         this.toId = toId;

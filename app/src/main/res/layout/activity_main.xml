@@ -11,16 +11,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="kevinbundschuh.android_chess14.MainActivity">
 
-    <Button
-        android:text="Start New Game!"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/new_game"
-        android:layout_above="@+id/saved_game"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        style="@style/Widget.AppCompat.Button" />
-
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -37,5 +27,15 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:layout_marginBottom="11dp"
+        android:layout_alignParentEnd="true"
+        />
+
+    <Button
+        android:text="Start New Game!"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/new_game"
+        android:layout_above="@+id/saved_game"
+        android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true" />
 </RelativeLayout>

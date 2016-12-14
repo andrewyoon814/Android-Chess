@@ -71,7 +71,7 @@
         android:text="display turn here"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/textView2"
+        android:id="@+id/turnView"
         android:layout_x="125dp"
         android:layout_y="70dp" />
 
