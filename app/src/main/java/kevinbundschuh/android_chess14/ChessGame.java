@@ -228,13 +228,13 @@ public class ChessGame extends AppCompatActivity {
             Toast.makeText(getApplicationContext(),"No previous move.", Toast.LENGTH_SHORT).show();
         }else{
 
+            //imageview that control the ui
             ImageView start = (ImageView) findViewById(previousMove.getToId());
             ImageView end = (ImageView) findViewById(previousMove.getPieceId());
+
+            //point objeects control the backend chessboard
             Point oldPt = strToCoord(previousMove.getFrom());
             Point newPt = strToCoord(previousMove.getTo());
-            //char color = previousMove.getPiece().charAt(0);
-
-            Piece piece;
 
             //tag switch and reset
             end.setTag(start.getTag());
@@ -339,7 +339,17 @@ public class ChessGame extends AppCompatActivity {
 
             moveHistory.remove(moveHistory.size() - 1);
 
-            game.board = saveBoard;
+            //game.board = saveBoard;
+            //revers the two positions
+            game.board[oldPt.getRow()][oldPt.getCol()] = game.board[newPt.getRow()][newPt.getCol()];
+            game.board[newPt.getRow()][newPt.getCol()] = null;
+
+            //put back the game turn
+            if(game.turn == 'w'){
+                game.turn = 'b';
+            }else{
+                game.turn = 'w';
+            }
         }
     }
 
