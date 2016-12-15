@@ -36,7 +36,7 @@ public class ChessGame extends AppCompatActivity {
     public Piece[][] saveBoard =game.board;
 
     //requested move is filled in on click and previous move holds the information from the previous turn for the undo button.
-    MoveHolder requestedMove;
+    static MoveHolder requestedMove;
     MoveHolder previousMove;
 
 
@@ -187,6 +187,61 @@ public class ChessGame extends AppCompatActivity {
                 previousMove.setClick(requestedMove.getClick());
                 previousMove.setToTag(requestedMove.getToTag());
 
+                if(enPassant){
+                    System.out.println(requestedMove.getTo());
+                    String del= "";
+                    del = requestedMove.getTo().substring(0,1) + requestedMove.getFrom().substring(1);
+                    /*Point pieceToDel = strToCoord(requestedMove.getTo());
+                    if(requestedMove.getPiece().charAt(0)=='w'){
+                        pieceToDel.setRow(pieceToDel.getRow()+1);
+                    } else
+                        pieceToDel.setRow(pieceToDel.getRow()-1);
+                    System.out.println("coord of piece to delete=" +pieceToDel);*/
+                    int idToDel = getResources().getIdentifier(del, "id", getPackageName());
+                    ImageView toDel =(ImageView)findViewById(idToDel);
+
+                    toDel.setImageResource(R.drawable.transparent);
+                    toDel.setTag("empty");
+                    toDel.setBackgroundColor(Color.TRANSPARENT);
+                }
+                if(castle){
+                    String rookPos="";
+                    String del = "";
+                    int dx;
+                    Point p1,p2;
+                    p1=strToCoord(requestedMove.getTo());
+                    p2=strToCoord(requestedMove.getFrom());
+                    dx = p2.getCol()-p1.getCol();
+                    if(requestedMove.getPiece().charAt(0)=='w'){
+                        if(dx == 3){
+                            rookPos = "f7";
+                            del = "h7";
+                        }else if (dx == -2) {
+                            rookPos = "c7";
+                            del = "a7";
+                        }
+                    } else {
+                        if (dx == 3) {
+                            rookPos = "f0";
+                            del = "h0";
+                        } else if (dx == -2) {
+                            rookPos = "c0";
+                            del = "a0";
+                        }
+                    }
+
+                    int idToDel = getResources().getIdentifier(del, "id", getPackageName());
+                    ImageView toDel =(ImageView)findViewById(idToDel);
+                    toDel.setImageResource(R.drawable.transparent);
+                    toDel.setTag("empty");
+                    toDel.setBackgroundColor(Color.TRANSPARENT);
+
+                    int newRookPos = getResources().getIdentifier(rookPos, "id", getPackageName());
+                    ImageView rook = (ImageView)findViewById(newRookPos);
+
+
+                }
+
                 //reset for future use
                 requestedMove.reset();
 
@@ -199,6 +254,7 @@ public class ChessGame extends AppCompatActivity {
                     turn = 'w';
                     turnView.setText("White Turn");
                 }
+
 
 
             }else{
@@ -920,10 +976,21 @@ public class ChessGame extends AppCompatActivity {
         return false;
     }
 
-    public void redrawEnPassant(Point point, Piece [][] board){
-        String str = ""+point.getRow()+point.getCol();
+    /*public static void redrawEnPassant(View view){
+        ImageButton clicked = (ImageButton) view;
+        System.out.println(requestedMove.getTo());
+        Point pieceToDel = strToCoord(requestedMove.getTo());
+        if(requestedMove.getPiece().charAt(0)=='w'){
+            pieceToDel.setRow(pieceToDel.getRow()-1);
+        } else
+            pieceToDel.setRow(pieceToDel.getRow()+1);
 
-    }
+        ImageView toDel =(ImageView)findViewById(requestedMove.getPieceId());
+
+        clicked.setImageResource(R.drawable.transparent);
+        clicked.setTag("empty");
+        clicked.setBackgroundColor(Color.TRANSPARENT);
+    }*/
 
     public void redrawCastle(Point point, Piece [][] board){
 
@@ -990,6 +1057,67 @@ public class ChessGame extends AppCompatActivity {
                 break;
 
         }
+        return temp;
+    }
+
+    public static String pointToCoord(Point point){
+        String temp = "";
+        System.out.println(point.getRow());
+        System.out.println(point.getCol());
+        switch (point.getCol()) {
+            case '0':
+                temp = temp+"a";
+                break;
+            case '1':
+                temp = temp+"b";
+                break;
+            case '2':
+                temp = temp+"c";
+                break;
+            case '3':
+                temp=temp+"d";
+                break;
+            case '4':
+                temp=temp+"e";
+                break;
+            case '5':
+                temp=temp+"f";
+                break;
+            case '6':
+                temp=temp+"g";
+                break;
+            case '7':
+                temp=temp+"h";
+                break;
+        }
+        switch (point.getRow()) {
+            case '0':
+                temp=temp+"0";
+                break;
+            case '1':
+                temp=temp+"1";
+                break;
+            case '2':
+                temp=temp+"2";
+                break;
+            case '3':
+                temp=temp+"3";
+                break;
+            case '4':
+                temp=temp+"4";
+                break;
+            case '5':
+                temp=temp+"5";
+                break;
+            case '6':
+                temp=temp+"6";
+                break;
+            case '7':
+                temp=temp+"7";
+                break;
+
+        }
+        System.out.println("temp is "+temp);
         return temp;
     }
 
