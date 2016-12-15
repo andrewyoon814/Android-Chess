@@ -15,9 +15,6 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import controller.Chess;
-import controller.moveValidator;
-
 import model.Bishop;
 import model.King;
 import model.Knight;
@@ -39,7 +36,7 @@ public class ChessGame extends AppCompatActivity {
     MoveHolder requestedMove;
     MoveHolder previousMove;
 
-    char turn = 'w';
+
     ArrayList<String> moveHistory = new ArrayList<String>();
 
     static char turn = 'w';

@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Chess</string>
+
+    <string-array name="sortOptions">
+        <item>Sort By Date</item>
+        <item>Sort By Name</item>
+    </string-array>
 </resources>

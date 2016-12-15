@@ -23,21 +23,28 @@
         android:textStyle="normal|bold"
         android:textColor="@android:color/black" />
 
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="380dp"
-        android:layout_below="@+id/textView2"
-        android:layout_alignParentStart="true"
-        android:id="@+id/gameList"/>
-
     <Button
         android:text="Go Back"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/button"
+        android:onClick="goBackHandler"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/gameList"
         android:layout_alignParentEnd="true"
-        android:onClick="goBackHandler"/>
+        android:layout_height="50dp" />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:id="@+id/gameList"
+        android:layout_height="350dp"
+        android:layout_above="@+id/button"
+        android:layout_alignParentStart="true" />
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner"
+        android:entries="@array/sortOptions"
+        android:layout_below="@+id/textView2"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>
