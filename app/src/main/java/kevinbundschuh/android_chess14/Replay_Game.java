@@ -1,18 +1,14 @@
 package kevinbundschuh.android_chess14;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -218,5 +214,14 @@ public class Replay_Game extends AppCompatActivity {
                 square.setImageResource(R.drawable.wbishop);
                 break;
         }
+    }
+
+    /**
+     * This is a listener to all the image buttons. However, since replay does not need any
+     * action to be done on click. This is an empty function that just makes the program not
+     * crash.
+     */
+    public void pieceClick(View view){
+        return;
     }
 }
