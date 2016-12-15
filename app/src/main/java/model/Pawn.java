@@ -25,7 +25,7 @@ public class Pawn extends Piece implements PieceInterface{
 		this.row = row;
 		this.color = color;
 		this.type = 'p';
-		boolean firstMove = false;
+		boolean firstMove = true;
 	}
 
 	/**
@@ -56,17 +56,17 @@ public class Pawn extends Piece implements PieceInterface{
 		}
 		
 		//capturing for black. make empty space true b/c it is handled in calling method
-		if((x==1 || x==-1) && this.color=='b' && y==1 && emptySpace==true){
+		if((x==1 || x==-1) && this.color=='b' && y==1){
 			return true;
 		}
 		
 		//capturing for white
-		if((x==1 || x==-1) && this.color=='w' && y==-1 && emptySpace==true){
+		if((x==1 || x==-1) && this.color=='w' && y==-1){
 			return true;
 		}
 
 		//need to handle moving double from original spot. maybe a piece move count?
-		if((y==2||y==-2) && x ==0 && emptySpace == true){
+		if((y==2||y==-2) && x ==0){
 			return true;
 		}
 

@@ -562,6 +562,11 @@ public class ChessGame extends AppCompatActivity {
                 int dx = newPt.getCol()-oldPt.getCol();
                 int dy = newPt.getRow()-oldPt.getRow();
 
+                System.out.println("dy == "+dy+" firstmove == "+selected.firstMove);
+                if(Math.abs(dy)==2 && selected.firstMove == false){
+                    System.out.println("invalid move");
+                    return false;
+                }
 
                 valid = ((Pawn) selected).validMove(oldPt,newPt,empty);
                 if(checkEnPassant(newPt, selected))
@@ -598,18 +603,8 @@ public class ChessGame extends AppCompatActivity {
                         game.board[oldPt.getRow()][oldPt.getCol()] = selected;
                         game.board[newPt.getRow()][newPt.getCol()] = null;
                         System.out.println("Illegal move, try again");
-                        validation = "false";
-
                         return false;
                     }
-
-                    if(selected.hasMoved == false){
-                        selected.firstMove = true;
-                    }
-                    if(selected.hasMoved &&selected.firstMove){
-                        selected.firstMove = false;
-                    }
-
                 }
                 break;
         }
@@ -618,6 +613,7 @@ public class ChessGame extends AppCompatActivity {
             return false;
         }
         selected.hasMoved=true;
+        selected.firstMove= false;
         validation = "true";
         return true;
     }

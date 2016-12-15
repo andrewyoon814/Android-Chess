@@ -15,7 +15,7 @@ public class Piece {
 	public char color;
 	public char type;
 	public boolean hasMoved=false;
-	public boolean firstMove = false;
+	public boolean firstMove = true;
 	
 	/**
 	 * Gets boolean has Moved
