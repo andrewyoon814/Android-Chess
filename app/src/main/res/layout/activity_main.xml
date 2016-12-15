@@ -28,6 +28,7 @@
         android:layout_alignParentStart="true"
         android:layout_marginBottom="11dp"
         android:layout_alignParentEnd="true"
+        android:onClick="listHandler"
         />
 
     <Button
@@ -37,5 +38,6 @@
         android:id="@+id/new_game"
         android:layout_above="@+id/saved_game"
         android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:onClick="listHandler"/>
 </RelativeLayout>

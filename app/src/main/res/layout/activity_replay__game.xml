@@ -2,70 +2,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_chess_game"
+    android:id="@+id/activity_replay__game"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="kevinbundschuh.android_chess14.ChessGame"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <Button
-        android:text="Undo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/undo_btn"
-        android:layout_alignParentStart="true"
-        android:onClick="undoListener"
-        />
-
-    <Button
-        android:text="Draw"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/resign_btn"
-        android:layout_below="@+id/undo_btn"
-        android:layout_alignParentStart="true"
-        android:onClick="drawListener"
-        />
-
-    <Button
-        android:text="AI Help"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/ai_btn"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:onClick="aiListener"
-        />
-
-    <TextView
-        android:text="White Turn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/turnView"
-        android:layout_alignBaseline="@+id/resign_btn"
-        android:layout_alignBottom="@+id/resign_btn"
-        android:layout_centerHorizontal="true"
-        android:textStyle="normal|bold"
-        android:textSize="30sp"
-        android:textAlignment="textStart"
-        android:textColor="?android:attr/actionMenuTextColor" />
-
-    <TextView
-        android:text="Welcome to Chess!"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView"
-        android:textSize="18sp"
-        android:layout_alignBaseline="@+id/ai_btn"
-        android:layout_alignBottom="@+id/ai_btn"
-        android:layout_alignStart="@+id/turnView"
-        android:textStyle="normal|bold"
-        android:textAlignment="textStart"
-        android:textColor="?android:attr/actionMenuTextColor" />
-
+    tools:context="kevinbundschuh.android_chess14.Replay_Game">
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -74,15 +18,37 @@
         android:layout_below="@+id/resign_btn"
         android:layout_alignParentStart="true" />
 
+    <TextView
+        android:text="GameName"
+        android:layout_width="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/replayGameName"
+        android:layout_alignParentEnd="true"
+        android:textAlignment="center"
+        android:textStyle="normal|bold"
+        android:textSize="36sp"
+        android:textColor="@android:color/black"
+        android:layout_height="50dp" />
+
+    <Button
+        android:text=" Next Move"
+        android:layout_height="wrap_content"
+        android:id="@+id/button4"
+        android:layout_width="100dp"
+        android:layout_alignParentEnd="true"
+        android:onClick="nextHandler"
+        android:layout_alignBottom="@+id/button6"
+        android:layout_alignTop="@+id/button6" />
+
     <GridLayout
         android:columnCount="8"
         android:rowCount="8"
         android:layout_width="310dp"
-        android:layout_height="311dp"
-        android:layout_marginTop="35dp"
-        android:layout_below="@+id/resign_btn"
+        android:id="@+id/board"
+        android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:id="@+id/board">
+        android:layout_height="311dp">
 
         <ImageButton
             app:srcCompat="@drawable/brook"
@@ -855,13 +821,23 @@
     </GridLayout>
 
     <Button
-        android:text="Resign"
-        android:layout_width="wrap_content"
+        android:text="Go Back"
         android:layout_height="wrap_content"
-        android:id="@+id/exit_btn"
-        android:onClick="resignListener"
-        android:layout_below="@+id/ai_btn"
-        android:layout_alignParentEnd="true" />
+        android:id="@+id/button6"
+        android:layout_width="100dp"
+        android:onClick="goHomeHandler"
+        android:layout_alignTop="@+id/button5"
+        android:layout_centerHorizontal="true"
+        android:layout_alignBottom="@+id/button5" />
+
+    <Button
+        android:text=" Previous Move"
+        android:layout_height="wrap_content"
+        android:id="@+id/button5"
+        android:layout_width="100dp"
+        android:onClick="prevButtonHandler"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true" />
 
 
 </RelativeLayout>

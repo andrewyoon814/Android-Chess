@@ -7,11 +7,12 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 import controller.Chess;
 import controller.moveValidator;
@@ -25,6 +26,7 @@ public class ChessGame extends AppCompatActivity {
     MoveHolder requestedMove;
     MoveHolder previousMove;
     char turn = 'w';
+    ArrayList<String> moveHistory = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +84,7 @@ public class ChessGame extends AppCompatActivity {
 
             //check if it is the opposing king
             if(clicked.getTag().toString().substring(1).equals("king")){
+                moveHistory.add(requestedMove.getPiece() + "," + requestedMove.getFrom() + "," + getResources().getResourceEntryName(clicked.getId()));
                 gameOver();
             }
 
@@ -156,6 +159,9 @@ public class ChessGame extends AppCompatActivity {
                 prev.setImageResource(R.drawable.transparent);
                 prev.setTag("empty");
                 prev.setBackgroundColor(Color.TRANSPARENT);
+
+                //add this move the history arraylist
+                moveHistory.add(requestedMove.getPiece() + "," + requestedMove.getFrom() + "," + requestedMove.getTo());
 
                 //save this current move as previous move so that you can use for undo's
                 previousMove = new MoveHolder();
@@ -309,6 +315,8 @@ public class ChessGame extends AppCompatActivity {
                 turn = 'w';
                 turnView.setText("White Turn");
             }
+
+            moveHistory.remove(moveHistory.size() - 1);
         }
     }
 
@@ -327,6 +335,10 @@ public class ChessGame extends AppCompatActivity {
         }else{
             result = "Game won by White!";
         }
+
+        moveHistory.add(result);
+
+        intent.putExtra("history", moveHistory);
 
         //pass result as extra to next screen
         intent.putExtra("Result", result);
@@ -356,8 +368,11 @@ public class ChessGame extends AppCompatActivity {
 
             public void onClick(DialogInterface dialog, int which) {
 
+                moveHistory.add("Game ends in Draw!");
+
                 Intent intent = new Intent(ChessGame.this, SaveGame.class);
                 intent.putExtra("Result", "Game Ended in Draw!");
+                intent.putExtra("history", moveHistory);
                 startActivity(intent);
                 finish();
             }
@@ -384,7 +399,6 @@ public class ChessGame extends AppCompatActivity {
 
 
         Intent intent = new Intent(ChessGame.this, SaveGame.class);
-        startActivity(intent);
 
        //see who won the game
         String result;
@@ -395,8 +409,11 @@ public class ChessGame extends AppCompatActivity {
             result = "Resign by White!";
         }
 
+        moveHistory.add(result);
+
         //pass result as extra to next screen
         intent.putExtra("Result", result);
+        intent.putExtra("history", moveHistory);
         startActivity(intent);
 
         finish();
@@ -408,7 +425,8 @@ public class ChessGame extends AppCompatActivity {
      * @param view
      */
     public void aiListener(View view){
-        Log.d("Debug Msg:", "ai button pressed");
+
+
     }
 
 }
