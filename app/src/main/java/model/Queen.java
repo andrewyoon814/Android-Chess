@@ -1,9 +1,6 @@
 package model;
 
-import controller.Point;
-import model.Rook;
-
-import java.util.ArrayList;
+import kevinbundschuh.android_chess14.Point;
 
 /**
  * This class represents the queen. 

@@ -12,17 +12,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
+<<<<<<< HEAD
 import java.util.ArrayList;
 
 import controller.Chess;
 import controller.moveValidator;
-
+=======
 import model.Bishop;
 import model.King;
 import model.Knight;
 import model.Pawn;
 import model.Piece;
+>>>>>>> f9aaadf6ec1aaa575042b736a734f31fbe77da14
 
 import model.MoveHolder;
 import model.Queen;
@@ -38,14 +39,15 @@ public class ChessGame extends AppCompatActivity {
     //requested move is filled in on click and previous move holds the information from the previous turn for the undo button.
     MoveHolder requestedMove;
     MoveHolder previousMove;
-
+<<<<<<< HEAD
     char turn = 'w';
     ArrayList<String> moveHistory = new ArrayList<String>();
+=======
 
     static char turn = 'w';
     boolean checkMate = false;
 
-
+>>>>>>> f9aaadf6ec1aaa575042b736a734f31fbe77da14
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

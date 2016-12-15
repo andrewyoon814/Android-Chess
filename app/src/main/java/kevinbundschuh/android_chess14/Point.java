@@ -1,4 +1,4 @@
-package controller;
+package kevinbundschuh.android_chess14;
 /**
  * Point class used for parameter passing
  * 

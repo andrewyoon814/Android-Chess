@@ -1,8 +1,6 @@
 package model;
 
-import java.util.ArrayList;
-
-import controller.Point;
+import kevinbundschuh.android_chess14.Point;
 
 /**
  * Rook class represents the rook,

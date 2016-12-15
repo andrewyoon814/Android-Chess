@@ -1,4 +1,4 @@
-package controller;
+package kevinbundschuh.android_chess14;
 
 import model.King;
 
@@ -10,7 +10,6 @@ import model.Rook;
 import model.Pawn;
 import model.Piece;
 
-import java.util.ArrayList;
 /**
  * This class is the game class.
  * Contains all utilities to create and print the boards.
@@ -26,7 +25,7 @@ public class Game {
 	 * chess board array
 	 * and char to keep track of whos turn it is
 	 */
-	
+
 	Piece[][] board;
 	char turn;
 	
@@ -52,8 +51,8 @@ public class Game {
 		board[0][0] = new Rook(0,0,'b');
 		board[0][1] = new Knight(0,1,'b');
 		board[0][2] = new Bishop(0,2,'b');
-		board[0][3] = new Queen(0,3,'b');
-		board[0][4] = new King(0,4,'b');
+		board[0][3] = new King(0,3,'b');
+		board[0][4] = new Queen(0,4,'b');
 		board[0][5] = new Bishop(0,5,'b');
 		board[0][6] = new Knight(0,6,'b');
 		board[0][7] = new Rook(0,7,'b');
@@ -66,8 +65,8 @@ public class Game {
 		board[7][0] = new Rook(7,0,'w');
 		board[7][1] = new Knight(7,1,'w');
 		board[7][2] = new Bishop(7,2,'w');
-		board[7][3] = new Queen(7,3,'w');
-		board[7][4] = new King(7,4,'w');
+		board[7][3] = new King(7,3,'w');
+		board[7][4] = new Queen(7,4,'w');
 		board[7][5] = new Bishop(7,5,'w');
 		board[7][6] = new Knight(7,6,'w');
 		board[7][7] = new Rook(7,7,'w');
@@ -221,4 +220,6 @@ public class Game {
 		}
 		return true;
 	}
+
+
 }
