@@ -29,13 +29,12 @@ public class ChessGame extends AppCompatActivity {
     public static boolean castle = false;
     public static String promotion = null;
     public static Piece[][] board = game.board;
-    public static String validation = null;
 
     //requested move is filled in on click and previous move holds the information from the previous turn for the undo button.
     MoveHolder requestedMove;
     MoveHolder previousMove;
 
-    char turn = 'w';
+    static char turn = 'w';
     boolean checkMate = false;
 
 
@@ -440,7 +439,7 @@ public class ChessGame extends AppCompatActivity {
         //treat capturing a piece of the other color as if it is an empty space it can be moved into
         //this lets pawns capture forward, need to fix this.
         if (game.board[newPt.getRow()][newPt.getCol()] == null
-                || game.turn != game.board[newPt.getRow()][newPt.getCol()].color) {
+                || turn != game.board[newPt.getRow()][newPt.getCol()].color) {
             empty = true;
         }
         //	if(selected.validMove)
@@ -478,7 +477,6 @@ public class ChessGame extends AppCompatActivity {
                         game.board[oldPt.getRow()][oldPt.getCol()] = selected;
                         game.board[newPt.getRow()][newPt.getCol()] = null;
                         System.out.println("Illegal move, try again");
-                        //validation = "false";
                         return false;
                     }
                 }
@@ -509,7 +507,6 @@ public class ChessGame extends AppCompatActivity {
                         game.board[oldPt.getRow()][oldPt.getCol()] = selected;
                         game.board[newPt.getRow()][newPt.getCol()] = null;
                         System.out.println("Illegal move, try again");
-                        validation = "false";
 
                         return false;
                     }
@@ -527,7 +524,6 @@ public class ChessGame extends AppCompatActivity {
                         game.board[oldPt.getRow()][oldPt.getCol()] = selected;
                         game.board[newPt.getRow()][newPt.getCol()] = null;
                         System.out.println("Illegal move, try again");
-                        validation = "false";
 
                         return false;
                     }
@@ -547,7 +543,6 @@ public class ChessGame extends AppCompatActivity {
                         game.board[oldPt.getRow()][oldPt.getCol()] = selected;
                         game.board[newPt.getRow()][newPt.getCol()] = null;
                         System.out.println("Illegal move, try again");
-                        validation = "false";
 
                         return false;
                     }
@@ -562,7 +557,6 @@ public class ChessGame extends AppCompatActivity {
                 int dx = newPt.getCol()-oldPt.getCol();
                 int dy = newPt.getRow()-oldPt.getRow();
 
-                System.out.println("dy == "+dy+" firstmove == "+selected.firstMove);
                 if(Math.abs(dy)==2 && selected.firstMove == false){
                     System.out.println("invalid move");
                     return false;
@@ -614,7 +608,6 @@ public class ChessGame extends AppCompatActivity {
         }
         selected.hasMoved=true;
         selected.firstMove= false;
-        validation = "true";
         return true;
     }
 
@@ -830,7 +823,7 @@ public class ChessGame extends AppCompatActivity {
         for (int row = 0; row < 8; row++){
             for (int col = 0; col < 8; col++){
                 if (game.board[row][col] != null) {
-                    if (game.board[row][col].color==game.turn&&game.board[row][col].type=='K') {
+                    if (game.board[row][col].color==turn&&game.board[row][col].type=='K') {
                         kingLoc.setRow(row);
                         kingLoc.setCol(col);
                         break;
@@ -844,7 +837,7 @@ public class ChessGame extends AppCompatActivity {
         for (int row = 0; row < 8; row++){
             for (int col = 0; col < 8; col++){
                 if (game.board[row][col] != null){
-                    if (game.board[row][col].color != game.turn){
+                    if (game.board[row][col].color != turn){
                         Point temp = new Point(row,col);
                         if (game.board[row][col].type =='K'){
                             if(((King) game.board[row][col]).validMove(temp, kingLoc, true)){
@@ -890,8 +883,13 @@ public class ChessGame extends AppCompatActivity {
         return false;
     }
 
-    public void handleEnPassant(Point point){
+    public void redrawEnPassant(Point point){
+        String str = ""+point.getRow()+point.getCol();
 
+    }
+
+    public void redrawCastle(Point point){
+        String str = ""+point.getRow() + point.getCol();
     }
 
 }
