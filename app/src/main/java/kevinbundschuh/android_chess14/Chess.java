@@ -1,4 +1,4 @@
-package controller;
+package kevinbundschuh.android_chess14;
 
 import model.Piece;
 import model.Queen;
@@ -8,7 +8,6 @@ import model.Knight;
 import model.Rook;
 import model.Pawn;
 
-import java.io.IOException;
 import java.util.Scanner;
 
 /**

@@ -13,18 +13,31 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import controller.Chess;
-import controller.moveValidator;
+import model.Bishop;
+import model.King;
+import model.Knight;
+import model.Pawn;
+import model.Piece;
 
 import model.MoveHolder;
+import model.Queen;
+import model.Rook;
 
 
 public class ChessGame extends AppCompatActivity {
+    public static Game game = new Game();
+    public static boolean castle = false;
+    public static String promotion = null;
+    public static Piece[][] board = game.board;
+    public static String validation = null;
 
     //requested move is filled in on click and previous move holds the information from the previous turn for the undo button.
     MoveHolder requestedMove;
     MoveHolder previousMove;
+
     char turn = 'w';
+    boolean checkMate = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +51,7 @@ public class ChessGame extends AppCompatActivity {
 
     public void pieceClick(View view) throws IllegalAccessException {
 
+        game.PrintBoard(game.board);
         //set the image button that was clicked
         ImageButton clicked = (ImageButton) view;
 
@@ -93,13 +107,7 @@ public class ChessGame extends AppCompatActivity {
 
             String valid;
 
-            /**
-             *
-             * Put move validation code here.
-             * I just set valid to true for debugging purposes
-             *
-             * Send the requestMove data to validator method and set valid equal to the return value
-             */
+
 
             valid = moveValidator.validator(requestedMove);
 
@@ -409,6 +417,485 @@ public class ChessGame extends AppCompatActivity {
      */
     public void aiListener(View view){
         Log.d("Debug Msg:", "ai button pressed");
+    }
+
+
+    public static boolean makeMove(Point oldPt, Point newPt){
+        boolean empty=false;
+        boolean clear = false;
+        boolean valid = false;
+        //boolean castle = false;
+        //boolean enPassant = false;
+        //boolean firstMove = false;
+        char color,pieceType;
+        //System.out.println(board[oldPt.getRow()][oldPt.getCol()].color);
+
+        color = game.board[oldPt.getRow()][oldPt.getCol()].color;
+        pieceType = game.board[oldPt.getRow()][oldPt.getCol()].type;
+
+        Piece selected=game.board[oldPt.getRow()][oldPt.getCol()];
+
+        System.out.println("selected piece moving: "+selected.toString());
+        System.out.println("piece has moved? :" +selected.hasMoved);
+        //treat capturing a piece of the other color as if it is an empty space it can be moved into
+        //this lets pawns capture forward, need to fix this.
+        if (game.board[newPt.getRow()][newPt.getCol()] == null
+                || game.turn != game.board[newPt.getRow()][newPt.getCol()].color) {
+            empty = true;
+        }
+        //	if(selected.validMove)
+
+        if(game.clearPath(oldPt, newPt)){
+            clear = true;
+        }else if(selected.type != 'p')
+            return false;
+
+        switch(pieceType){
+            case 'K':
+                if(!selected.hasMoved)
+                    selected = new King(oldPt.getRow(),oldPt.getCol(), color);
+                valid = ((King) selected).validMove(oldPt,newPt,empty);
+                if(!valid){
+                    int dx=newPt.getCol()-oldPt.getCol();
+                    if(dx==2){
+                        if (selected.color=='w'){
+                            checkCastle(oldPt, newPt, selected, game.board[7][7]);
+                        }
+
+                        else{
+                            checkCastle(oldPt,newPt,selected,game.board[0][7]);
+                        }
+                    }else if(dx==-3){
+                        if(selected.color=='w')
+                            checkCastle(oldPt,newPt,selected,game.board[7][0]);
+                        else
+                            checkCastle(oldPt,newPt,selected,game.board[0][0]);
+                    }
+                }else if (empty && clear &&valid) {
+                    game.board[oldPt.getRow()][oldPt.getCol()] = null;
+                    game.board[newPt.getRow()][newPt.getCol()] = selected;
+                    if(inCheck()){
+                        game.board[oldPt.getRow()][oldPt.getCol()] = selected;
+                        game.board[newPt.getRow()][newPt.getCol()] = null;
+                        System.out.println("Illegal move, try again");
+                        //validation = "false";
+                        return false;
+                    }
+                }
+                break;
+            case 'Q':
+                if(!selected.hasMoved)
+                    selected = new Queen(oldPt.getRow(),oldPt.getCol(), color);
+                valid = ((Queen) selected).validMove(oldPt,newPt,empty);
+                if (empty && clear &&valid) {
+                    game.board[oldPt.getRow()][oldPt.getCol()] = null;
+                    game.board[newPt.getRow()][newPt.getCol()] = selected;
+                    if(inCheck()){
+                        game.board[oldPt.getRow()][oldPt.getCol()] = selected;
+                        game.board[newPt.getRow()][newPt.getCol()] = null;
+                        System.out.println("Illegal move, try again");
+                        return false;
+                    }
+                }
+                break;
+            case 'B':
+                if(!selected.hasMoved)
+                    selected = new Bishop(oldPt.getRow(),oldPt.getCol(), color);
+                valid = ((Bishop) selected).validMove(oldPt,newPt,empty);
+                if (empty && clear &&valid) {
+                    game.board[oldPt.getRow()][oldPt.getCol()] = null;
+                    game.board[newPt.getRow()][newPt.getCol()] = selected;
+                    if(inCheck()){
+                        game.board[oldPt.getRow()][oldPt.getCol()] = selected;
+                        game.board[newPt.getRow()][newPt.getCol()] = null;
+                        System.out.println("Illegal move, try again");
+                        validation = "false";
+
+                        return false;
+                    }
+                }
+                break;
+            case 'N':
+                if(!selected.hasMoved)
+                    selected = new Knight(oldPt.getRow(),oldPt.getCol(), color);
+                valid = ((Knight) selected).validMove(oldPt,newPt,empty);
+                //System.out.println(x);
+                if (empty && clear &&valid) {
+                    game.board[oldPt.getRow()][oldPt.getCol()] = null;
+                    game.board[newPt.getRow()][newPt.getCol()] = selected;
+                    if(inCheck()){
+                        game.board[oldPt.getRow()][oldPt.getCol()] = selected;
+                        game.board[newPt.getRow()][newPt.getCol()] = null;
+                        System.out.println("Illegal move, try again");
+                        validation = "false";
+
+                        return false;
+                    }
+
+                }
+
+                break;
+            case 'R':
+                if(!selected.hasMoved)
+                    selected = new Rook(oldPt.getRow(),oldPt.getCol(), color);
+                valid = ((Rook) selected).validMove(oldPt,newPt,empty);
+
+                if (empty && clear &&valid) {
+                    game.board[oldPt.getRow()][oldPt.getCol()] = null;
+                    game.board[newPt.getRow()][newPt.getCol()] = selected;
+                    if(inCheck()){
+                        game.board[oldPt.getRow()][oldPt.getCol()] = selected;
+                        game.board[newPt.getRow()][newPt.getCol()] = null;
+                        System.out.println("Illegal move, try again");
+                        validation = "false";
+
+                        return false;
+                    }
+
+                }
+
+                break;
+            case 'p':
+                boolean enPassant=false , promo = false;
+                if(!selected.hasMoved)
+                    selected = new Pawn(oldPt.getRow(),oldPt.getCol(), color);
+                int dx = newPt.getCol()-oldPt.getCol();
+                int dy = newPt.getRow()-oldPt.getRow();
+
+
+                valid = ((Pawn) selected).validMove(oldPt,newPt,empty);
+                if(checkEnPassant(newPt, selected))
+                    enPassant=true;
+                if(game.board[newPt.getRow()][newPt.getCol()]!=null&&dx==0&&(dy==1||dy==-1||dy==2||dy==-2)){
+                    valid = false;
+                    return false;
+                }
+
+                if(game.board[newPt.getRow()][newPt.getCol()]==null&&(dx==1||dx==-1)&&!enPassant){
+                    valid = false;
+                    return false;
+                }
+
+                if(checkPromotion(newPt, selected)){
+                    promo = true;
+                }
+                //if(checkEnPassant(newPt, selected))
+                //enPassant=true;
+                if (empty && clear &&(valid||enPassant||promo)) {
+                    if (enPassant) {
+                        if (selected.color == 'w') {
+                            game.board[newPt.getRow() + 1][newPt.getCol()] = null;
+                        } else {
+                            game.board[newPt.getRow() - 1][newPt.getCol()] = null;
+                        }
+                    }
+                    if(promo){
+                        selected = makePromotion(selected);
+                    }
+                    game.board[oldPt.getRow()][oldPt.getCol()] = null;
+                    game.board[newPt.getRow()][newPt.getCol()] = selected;
+                    if(inCheck()){
+                        game.board[oldPt.getRow()][oldPt.getCol()] = selected;
+                        game.board[newPt.getRow()][newPt.getCol()] = null;
+                        System.out.println("Illegal move, try again");
+                        validation = "false";
+
+                        return false;
+                    }
+
+                    if(selected.hasMoved == false){
+                        selected.firstMove = true;
+                    }
+                    if(selected.hasMoved &&selected.firstMove){
+                        selected.firstMove = false;
+                    }
+
+                }
+                break;
+        }
+        if(!valid && !castle){
+            System.out.println("Illegal move, try again");
+            return false;
+        }
+        selected.hasMoved=true;
+        validation = "true";
+        return true;
+    }
+
+    public static boolean checkEnPassant(Point newPt, Piece piece){
+        if(piece.type!='p')
+            return false;
+
+        if(piece.color=='w'){
+            if(game.board[newPt.getRow()+1][newPt.getCol()]==null||game.board[newPt.getRow()+1][newPt.getCol()].type !='p'
+                    ||game.board[newPt.getRow()+1][newPt.getCol()].color=='w'){
+                return false;
+            }else if(game.board[newPt.getRow()+1][newPt.getCol()]!=null&&game.board[newPt.getRow()+1][newPt.getCol()].type=='p'
+                    &&game.board[newPt.getRow()+1][newPt.getCol()].firstMove){
+                //game.board[newPt.getRow()][newPt.getCol()]=null;
+
+                return true;
+            }
+        }else{
+            if(game.board[newPt.getRow()-1][newPt.getCol()]==null||game.board[newPt.getRow()-1][newPt.getCol()].type !='p'
+                    ||game.board[newPt.getRow()-1][newPt.getCol()].color=='b'){
+                return false;
+            }else if(game.board[newPt.getRow()-1][newPt.getCol()]!=null&&game.board[newPt.getRow()-1][newPt.getCol()].type=='p'
+                    &&game.board[newPt.getRow()-1][newPt.getCol()].firstMove){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * checks if a pawns move was eligible for a promotion.
+     * promotes to piece designated by user
+     * if no piece specified, pawn becomes queen by default
+     *
+     * @param dest - should be row 8 or 1
+     * @param piece - should be a pawn
+     * @return true if pawn is to be promoted
+     * @author kevin bundschuh
+     */
+    public static boolean checkPromotion(Point dest, Piece piece){
+        if(piece.type != 'p')
+            return false;
+        if(piece.color == 'w'){
+            if (dest.getRow()==0){
+                return true;
+            }
+        }else if(piece.color =='b'){
+            if(dest.getRow()==7){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * if a pawn is to be promoted, this sets the pawn to the proper piece according to user input
+     *
+     * @param piece - pawn to be promoted
+     * @return promoted piece - piece the pawn is to be promoted to
+     * @author kevin bundschuh
+     */
+    public static Piece makePromotion(Piece piece){
+        Piece temp;
+        if(promotion == null){
+            temp = new Queen(piece.row,piece.col,piece.color);
+        } else {
+            switch (promotion) {
+                case "q":
+                case "Q":
+                    temp = new Queen(piece.row, piece.col, piece.color);
+                    break;
+                case "r":
+                case "R":
+                    temp = new Rook(piece.row, piece.col, piece.color);
+                    break;
+                case "b":
+                case "B":
+                    temp = new Bishop(piece.row, piece.col, piece.color);
+                    break;
+                case "n":
+                case "N":
+                    temp = new Knight(piece.row, piece.col, piece.color);
+                    break;
+                default:
+                    temp = new Queen(piece.row, piece.col, piece.color);
+                    break;
+            }
+        }
+        return temp;
+
+    }
+
+    /**
+     * checks to see if kings intended movement was to castle
+     *
+     * @param oldPt - king's position
+     * @param newPt - point king is to move to
+     * @param king - king piece passed in
+     * @param rook - rook piece passed in
+     * @author kevin bundschuh
+     */
+
+    public static void checkCastle(Point oldPt, Point newPt, Piece king, Piece rook){
+        int dx = newPt.getCol()-oldPt.getCol();
+
+        if(king.type =='K'&&king.hasMoved==false&&king.color=='b'){
+            if(dx==-3){
+                if(game.board[0][0]!=null&&game.board[0][0].type=='R'&&game.board[0][0].color=='b'
+                        &&game.board[0][0].hasMoved==false&&game.clearPath(oldPt,newPt)){
+                    game.board[0][0]=null;
+                    game.board[oldPt.getRow()][oldPt.getCol()]=null;
+
+                    game.board[newPt.getRow()][newPt.getCol()]=king;
+                    game.board[newPt.getRow()][newPt.getCol()+1]=rook;
+                    if(inCheck()){
+                        game.board[0][0]=rook;
+                        game.board[oldPt.getRow()][oldPt.getCol()]=king;
+
+                        game.board[newPt.getRow()][newPt.getCol()]=null;
+                        game.board[newPt.getRow()][newPt.getCol()+1]=null;
+                        System.out.println("Illegal move, try again");
+
+                        return;
+                    }
+                    castle = true;
+                    return;
+                }
+            }
+            if(dx==2){
+                if(game.board[0][7]!=null&&game.board[0][7].type=='R'&&game.board[0][7].color=='b'
+                        &&game.board[0][7].hasMoved==false&&game.clearPath(oldPt,newPt)){
+                    game.board[0][7]=null;
+                    game.board[oldPt.getRow()][oldPt.getCol()]=null;
+
+                    game.board[newPt.getRow()][newPt.getCol()]=king;
+                    game.board[newPt.getRow()][newPt.getCol()-1]=rook;
+                    if(inCheck()){
+                        game.board[0][7]=rook;
+                        game.board[oldPt.getRow()][oldPt.getCol()]=king;
+
+                        game.board[newPt.getRow()][newPt.getCol()]=null;
+                        game.board[newPt.getRow()][newPt.getCol()-1]=null;
+                        System.out.println("Illegal move, try again");
+
+                        return;
+                    }
+                    castle = true;
+                    return;
+                }
+            }
+        }
+        if(king.type =='K'&&king.hasMoved==false&&king.color=='w'){
+            if (dx == -3) {
+                if (game.board[7][0] != null && game.board[7][0].type == 'R' && game.board[7][0].color == 'w'
+                        && game.board[7][0].hasMoved == false && game.clearPath(oldPt, newPt)) {
+                    game.board[7][0]=null;
+                    game.board[oldPt.getRow()][oldPt.getCol()]=null;
+
+                    game.board[newPt.getRow()][newPt.getCol()]=king;
+                    game.board[newPt.getRow()][newPt.getCol()+1]=rook;
+                    if(inCheck()){
+                        game.board[7][0]=rook;
+                        game.board[oldPt.getRow()][oldPt.getCol()]=king;
+
+                        game.board[newPt.getRow()][newPt.getCol()]=null;
+                        game.board[newPt.getRow()][newPt.getCol()+1]=null;
+                        System.out.println("Illegal move, try again");
+
+                        return;
+                    }
+                    castle = true;
+                    return;
+                }
+            }
+            if(dx==2){
+                if (game.board[7][7] != null && game.board[7][7].type == 'R' && game.board[7][7].color == 'w'
+                        && game.board[7][7].hasMoved == false && game.clearPath(oldPt, newPt)) {
+                    game.board[7][7]=null;
+                    game.board[oldPt.getRow()][oldPt.getCol()]=null;
+
+                    game.board[newPt.getRow()][newPt.getCol()]=king;
+                    game.board[newPt.getRow()][newPt.getCol()-1]=rook;
+                    if(inCheck()){
+                        game.board[0][0]=rook;
+                        game.board[oldPt.getRow()][oldPt.getCol()]=king;
+
+                        game.board[newPt.getRow()][newPt.getCol()]=null;
+                        game.board[newPt.getRow()][newPt.getCol()-1]=null;
+                        System.out.println("Illegal move, try again");
+                        return;
+                    }
+                    castle = true;
+                    return;
+                }
+            }
+        }
+        castle = false;
+    }
+
+
+    /**
+     * detects if piece movement puts the king in check
+     *
+     * @return true if king is in check
+     * @author kevin bundschuh
+     */
+    public static boolean inCheck(){
+
+
+        //find king location
+        Point kingLoc = new Point();
+        for (int row = 0; row < 8; row++){
+            for (int col = 0; col < 8; col++){
+                if (game.board[row][col] != null) {
+                    if (game.board[row][col].color==game.turn&&game.board[row][col].type=='K') {
+                        kingLoc.setRow(row);
+                        kingLoc.setCol(col);
+                        break;
+                    }
+                }
+            }
+        }
+
+
+        //check to see if any of the pieces put king in check
+        for (int row = 0; row < 8; row++){
+            for (int col = 0; col < 8; col++){
+                if (game.board[row][col] != null){
+                    if (game.board[row][col].color != game.turn){
+                        Point temp = new Point(row,col);
+                        if (game.board[row][col].type =='K'){
+                            if(((King) game.board[row][col]).validMove(temp, kingLoc, true)){
+                                if(game.clearPath(temp, kingLoc)){
+                                    return true;
+                                }
+                            }
+                        }else if(game.board[row][col].type =='Q'){
+                            if(((Queen) game.board[row][col]).validMove(temp, kingLoc, true)){
+                                if(game.clearPath(temp, kingLoc)){
+                                    return true;
+                                }
+                            }
+                        }else if(game.board[row][col].type =='B'){
+                            if(((Bishop) game.board[row][col]).validMove(temp, kingLoc, true)){
+                                if(game.clearPath(temp, kingLoc)){
+                                    return true;
+                                }
+                            }
+                        }else if(game.board[row][col].type =='N'){
+                            if(((Knight) game.board[row][col]).validMove(temp, kingLoc, true)){
+                                if(game.clearPath(temp, kingLoc)){
+                                    return true;
+                                }
+                            }
+                        }else if(game.board[row][col].type =='R'){
+                            if(((Rook) game.board[row][col]).validMove(temp, kingLoc, true)){
+                                if(game.clearPath(temp, kingLoc)){
+                                    return true;
+                                }
+                            }
+                        }else if(game.board[row][col].type =='p'){
+                            if(((Pawn) game.board[row][col]).validMove(temp, kingLoc, true)){
+                                if(game.clearPath(temp, kingLoc)){
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public void handleEnPassant(Point point){
+
     }
 
 }

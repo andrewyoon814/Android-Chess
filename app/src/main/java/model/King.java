@@ -1,9 +1,8 @@
 package model;
 
-import controller.Point;
+import kevinbundschuh.android_chess14.Point;
 //import chess.Game;
 
-import java.util.ArrayList;
 
 /**
  * This class represents the knight.

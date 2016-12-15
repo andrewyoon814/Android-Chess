@@ -1,4 +1,4 @@
-package controller;
+package kevinbundschuh.android_chess14;
 
 import model.King;
 
@@ -10,7 +10,6 @@ import model.Rook;
 import model.Pawn;
 import model.Piece;
 
-import java.util.ArrayList;
 /**
  * This class is the game class.
  * Contains all utilities to create and print the boards.
@@ -26,7 +25,7 @@ public class Game {
 	 * chess board array
 	 * and char to keep track of whos turn it is
 	 */
-	
+
 	Piece[][] board;
 	char turn;
 	
@@ -221,4 +220,6 @@ public class Game {
 		}
 		return true;
 	}
+
+
 }

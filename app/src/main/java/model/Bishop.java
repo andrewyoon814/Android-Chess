@@ -1,8 +1,6 @@
 package model;
 
-import controller.Point;
-
-import java.util.ArrayList;
+import kevinbundschuh.android_chess14.Point;
 
 /**
  * This class represents the bishop.
