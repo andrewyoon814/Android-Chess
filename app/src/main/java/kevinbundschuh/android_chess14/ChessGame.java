@@ -30,7 +30,10 @@ public class ChessGame extends AppCompatActivity {
     public static Game game = new Game();
     public static boolean castle = false;
     public static String promotion = null;
-    public static Piece[][] board = game.board;
+    //public static Piece[][] board = game.board;
+    public static boolean enPassant = false;
+    public static boolean promo = false;
+    public Piece[][] saveBoard =game.board;
 
     //requested move is filled in on click and previous move holds the information from the previous turn for the undo button.
     MoveHolder requestedMove;
@@ -227,6 +230,11 @@ public class ChessGame extends AppCompatActivity {
 
             ImageView start = (ImageView) findViewById(previousMove.getToId());
             ImageView end = (ImageView) findViewById(previousMove.getPieceId());
+            Point oldPt = strToCoord(previousMove.getFrom());
+            Point newPt = strToCoord(previousMove.getTo());
+            //char color = previousMove.getPiece().charAt(0);
+
+            Piece piece;
 
             //tag switch and reset
             end.setTag(start.getTag());
@@ -236,6 +244,8 @@ public class ChessGame extends AppCompatActivity {
             switch (previousMove.getPiece()) {
                 case "bking":
                     end.setImageResource(R.drawable.bking);
+                    /*piece = new King(oldPt.getRow(),oldPt.getCol(), 'b');
+                    game.board[oldPt.getRow()][oldPt.getCol()]=piece;*/
                     break;
                 case "bqueen":
                     end.setImageResource(R.drawable.bqueen);
@@ -328,6 +338,8 @@ public class ChessGame extends AppCompatActivity {
             }
 
             moveHistory.remove(moveHistory.size() - 1);
+
+            game.board = saveBoard;
         }
     }
 
@@ -478,7 +490,7 @@ public class ChessGame extends AppCompatActivity {
                 valid = ((King) selected).validMove(oldPt,newPt,empty);
                 if(!valid){
                     int dx=newPt.getCol()-oldPt.getCol();
-                    if(dx==2){
+                    if(dx==-2){
                         if (selected.color=='w'){
                             checkCastle(oldPt, newPt, selected, game.board[7][7]);
                         }
@@ -486,7 +498,7 @@ public class ChessGame extends AppCompatActivity {
                         else{
                             checkCastle(oldPt,newPt,selected,game.board[0][7]);
                         }
-                    }else if(dx==-3){
+                    }else if(dx==3){
                         if(selected.color=='w')
                             checkCastle(oldPt,newPt,selected,game.board[7][0]);
                         else
@@ -573,7 +585,7 @@ public class ChessGame extends AppCompatActivity {
 
                 break;
             case 'p':
-                boolean enPassant=false , promo = false;
+                boolean promo = false;
                 if(!selected.hasMoved)
                     selected = new Pawn(oldPt.getRow(),oldPt.getCol(), color);
                 int dx = newPt.getCol()-oldPt.getCol();
@@ -621,6 +633,12 @@ public class ChessGame extends AppCompatActivity {
                         System.out.println("Illegal move, try again");
                         return false;
                     }
+                    if(selected.hasMoved == false){
+                        selected.firstMove = true;
+                    }
+                    if(selected.hasMoved &&selected.firstMove){
+                        selected.firstMove = false;
+                    }
                 }
                 break;
         }
@@ -629,14 +647,12 @@ public class ChessGame extends AppCompatActivity {
             return false;
         }
         selected.hasMoved=true;
-        selected.firstMove= false;
         return true;
     }
 
     public static boolean checkEnPassant(Point newPt, Piece piece){
         if(piece.type!='p')
             return false;
-
         if(piece.color=='w'){
             if(game.board[newPt.getRow()+1][newPt.getCol()]==null||game.board[newPt.getRow()+1][newPt.getCol()].type !='p'
                     ||game.board[newPt.getRow()+1][newPt.getCol()].color=='w'){
@@ -735,31 +751,8 @@ public class ChessGame extends AppCompatActivity {
 
     public static void checkCastle(Point oldPt, Point newPt, Piece king, Piece rook){
         int dx = newPt.getCol()-oldPt.getCol();
-
         if(king.type =='K'&&king.hasMoved==false&&king.color=='b'){
-            if(dx==-3){
-                if(game.board[0][0]!=null&&game.board[0][0].type=='R'&&game.board[0][0].color=='b'
-                        &&game.board[0][0].hasMoved==false&&game.clearPath(oldPt,newPt)){
-                    game.board[0][0]=null;
-                    game.board[oldPt.getRow()][oldPt.getCol()]=null;
-
-                    game.board[newPt.getRow()][newPt.getCol()]=king;
-                    game.board[newPt.getRow()][newPt.getCol()+1]=rook;
-                    if(inCheck()){
-                        game.board[0][0]=rook;
-                        game.board[oldPt.getRow()][oldPt.getCol()]=king;
-
-                        game.board[newPt.getRow()][newPt.getCol()]=null;
-                        game.board[newPt.getRow()][newPt.getCol()+1]=null;
-                        System.out.println("Illegal move, try again");
-
-                        return;
-                    }
-                    castle = true;
-                    return;
-                }
-            }
-            if(dx==2){
+            if(dx==3){
                 if(game.board[0][7]!=null&&game.board[0][7].type=='R'&&game.board[0][7].color=='b'
                         &&game.board[0][7].hasMoved==false&&game.clearPath(oldPt,newPt)){
                     game.board[0][7]=null;
@@ -781,9 +774,53 @@ public class ChessGame extends AppCompatActivity {
                     return;
                 }
             }
+            if(dx==-2){
+                if(game.board[0][0]!=null&&game.board[0][0].type=='R'&&game.board[0][0].color=='b'
+                        &&game.board[0][0].hasMoved==false&&game.clearPath(oldPt,newPt)){
+                    game.board[0][0]=null;
+                    game.board[oldPt.getRow()][oldPt.getCol()]=null;
+
+                    game.board[newPt.getRow()][newPt.getCol()]=king;
+                    game.board[newPt.getRow()][newPt.getCol()+1]=rook;
+                    if(inCheck()){
+                        game.board[0][0]=rook;
+                        game.board[oldPt.getRow()][oldPt.getCol()]=king;
+
+                        game.board[newPt.getRow()][newPt.getCol()]=null;
+                        game.board[newPt.getRow()][newPt.getCol()+1]=null;
+                        System.out.println("Illegal move, try again");
+
+                        return;
+                    }
+                    castle = true;
+                    return;
+                }
+            }
         }
         if(king.type =='K'&&king.hasMoved==false&&king.color=='w'){
-            if (dx == -3) {
+            if (dx == 3) {
+                if (game.board[7][7] != null && game.board[7][7].type == 'R' && game.board[7][7].color == 'w'
+                        && game.board[7][7].hasMoved == false && game.clearPath(oldPt, newPt)) {
+                    game.board[7][7]=null;
+                    game.board[oldPt.getRow()][oldPt.getCol()]=null;
+
+                    game.board[newPt.getRow()][newPt.getCol()]=king;
+                    game.board[newPt.getRow()][newPt.getCol()-1]=rook;
+                    if(inCheck()){
+                        game.board[7][7]=rook;
+                        game.board[oldPt.getRow()][oldPt.getCol()]=king;
+
+                        game.board[newPt.getRow()][newPt.getCol()]=null;
+                        game.board[newPt.getRow()][newPt.getCol()-1]=null;
+                        System.out.println("Illegal move, try again");
+
+                        return;
+                    }
+                    castle = true;
+                    return;
+                }
+            }
+            if(dx==-2){
                 if (game.board[7][0] != null && game.board[7][0].type == 'R' && game.board[7][0].color == 'w'
                         && game.board[7][0].hasMoved == false && game.clearPath(oldPt, newPt)) {
                     game.board[7][0]=null;
@@ -797,28 +834,6 @@ public class ChessGame extends AppCompatActivity {
 
                         game.board[newPt.getRow()][newPt.getCol()]=null;
                         game.board[newPt.getRow()][newPt.getCol()+1]=null;
-                        System.out.println("Illegal move, try again");
-
-                        return;
-                    }
-                    castle = true;
-                    return;
-                }
-            }
-            if(dx==2){
-                if (game.board[7][7] != null && game.board[7][7].type == 'R' && game.board[7][7].color == 'w'
-                        && game.board[7][7].hasMoved == false && game.clearPath(oldPt, newPt)) {
-                    game.board[7][7]=null;
-                    game.board[oldPt.getRow()][oldPt.getCol()]=null;
-
-                    game.board[newPt.getRow()][newPt.getCol()]=king;
-                    game.board[newPt.getRow()][newPt.getCol()-1]=rook;
-                    if(inCheck()){
-                        game.board[0][0]=rook;
-                        game.board[oldPt.getRow()][oldPt.getCol()]=king;
-
-                        game.board[newPt.getRow()][newPt.getCol()]=null;
-                        game.board[newPt.getRow()][newPt.getCol()-1]=null;
                         System.out.println("Illegal move, try again");
                         return;
                     }
@@ -905,13 +920,77 @@ public class ChessGame extends AppCompatActivity {
         return false;
     }
 
-    public void redrawEnPassant(Point point){
+    public void redrawEnPassant(Point point, Piece [][] board){
         String str = ""+point.getRow()+point.getCol();
 
     }
 
-    public void redrawCastle(Point point){
+    public void redrawCastle(Point point, Piece [][] board){
+
         String str = ""+point.getRow() + point.getCol();
+    }
+
+    public void redrawPromo(Point point, Piece [][] board){
+
+    }
+
+    public static Point strToCoord(String str) {
+
+        Point temp = new Point();
+        switch (str.charAt(0)) {
+            case 'a':
+                temp.setCol(0);
+                break;
+            case 'b':
+                temp.setCol(1);
+                break;
+            case 'c':
+                temp.setCol(2);
+                break;
+            case 'd':
+                temp.setCol(3);
+                break;
+            case 'e':
+                temp.setCol(4);
+                break;
+            case 'f':
+                temp.setCol(5);
+                break;
+            case 'g':
+                temp.setCol(6);
+                break;
+            case 'h':
+                temp.setCol(7);
+                break;
+        }
+        switch (str.charAt(1)) {
+            case '0':
+                temp.setRow(0);
+                break;
+            case '1':
+                temp.setRow(1);
+                break;
+            case '2':
+                temp.setRow(2);
+                break;
+            case '3':
+                temp.setRow(3);
+                break;
+            case '4':
+                temp.setRow(4);
+                break;
+            case '5':
+                temp.setRow(5);
+                break;
+            case '6':
+                temp.setRow(6);
+                break;
+            case '7':
+                temp.setRow(7);
+                break;
+
+        }
+        return temp;
     }
 
 }
