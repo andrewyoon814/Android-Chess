@@ -293,7 +293,7 @@ public class ChessGame extends AppCompatActivity {
                                             break;
 
                                         case "bishop":
-                                            if(turn =='w') {
+                                            if(turn =='b') {
                                                 pro.setImageResource(R.drawable.wbishop);
                                                 pro.setTag("wbishop");
                                             }
@@ -304,7 +304,7 @@ public class ChessGame extends AppCompatActivity {
                                             break;
 
                                         case "rook":
-                                            if(turn =='w') {
+                                            if(turn =='b') {
                                                 pro.setImageResource(R.drawable.wrook);
                                                 pro.setTag("wrook");
                                             }
@@ -315,7 +315,7 @@ public class ChessGame extends AppCompatActivity {
                                             break;
 
                                         case "knight":
-                                            if(turn =='w') {
+                                            if(turn =='b') {
                                                 pro.setImageResource(R.drawable.whorse);
                                                 pro.setTag("whorse");
                                             }
@@ -1085,11 +1085,6 @@ public class ChessGame extends AppCompatActivity {
     }
 
 
-
-
-    public void redrawPromo(Point point, Piece [][] board){
-
-    }
 
     public static Point strToCoord(String str) {
 
