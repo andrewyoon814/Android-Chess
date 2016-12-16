@@ -56,6 +56,8 @@ public class ChessGame extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chess_game);
 
+        turn = 'w';
+
         //create requested move object.
         requestedMove = new MoveHolder();
 
