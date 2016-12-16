@@ -88,6 +88,14 @@ public class List_Games extends AppCompatActivity {
 
         Context context = getApplicationContext();
 
+        String path= getFilesDir() + "/games.ser";
+        File file = new File (path);
+
+        //check if file exists. If not return.
+        if ( !file.exists() ) {
+            return;
+        }
+
         //read the serialized file
         try {
 
@@ -158,6 +166,15 @@ public class List_Games extends AppCompatActivity {
      * which things are inserted in.
      */
     public void sortByDate(){
+
+        String path= getFilesDir() + "/games.ser";
+        File file = new File (path);
+
+        //check if file exists. If not return.
+        if ( !file.exists() ) {
+            return;
+        }
+
         Context context = getApplicationContext();
 
         try {
