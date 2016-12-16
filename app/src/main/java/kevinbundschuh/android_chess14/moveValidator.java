@@ -1,6 +1,6 @@
 package kevinbundschuh.android_chess14;
 
-import model.MoveHolder;
+import model.*;
 
 /**
  * Created by Andrew Yoon on 12/13/2016.
@@ -23,6 +23,7 @@ public class moveValidator {
         else
             return "false";
     }
+
 
     public static Point strToCoord(String str) {
 

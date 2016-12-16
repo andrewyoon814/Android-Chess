@@ -72,6 +72,36 @@ public class Pawn extends Piece implements PieceInterface{
 
 		return false;
 	}
+
+	public boolean aivalidMove(Point oldloc, Point newloc, boolean emptySpace) {
+		int x,y;
+
+		x = newloc.getCol() - oldloc.getCol();
+		y = newloc.getRow() - oldloc.getRow();
+
+
+		//black movement
+		if(x==0 && this.color == 'b' && y==1){
+			return true;
+		}
+
+		//white movement
+		if(x==0 && this.color == 'w' && y==-1){
+			return true;
+		}
+
+		//capturing for black. make empty space true b/c it is handled in calling method
+		if((x==1 || x==-1) && this.color=='b' && y==1){
+			return true;
+		}
+
+		//capturing for white
+		if((x==1 || x==-1) && this.color=='w' && y==-1) {
+			return true;
+		}
+
+		return false;
+	}
 	
 	
 

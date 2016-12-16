@@ -2,10 +2,12 @@ package kevinbundschuh.android_chess14;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -115,8 +117,6 @@ public class ChessGame extends AppCompatActivity {
             requestedMove.setToId(clicked.getId());
 
             String valid;
-
-
 
             valid = moveValidator.validator(requestedMove);
 
@@ -515,7 +515,7 @@ public class ChessGame extends AppCompatActivity {
      */
     public void aiListener(View view){
 
-
+        Toast.makeText(getApplicationContext(), "No Possible Moves!", Toast.LENGTH_SHORT).show();
     }
 
 
@@ -1130,5 +1130,7 @@ public class ChessGame extends AppCompatActivity {
         System.out.println("temp is "+temp);
         return temp;
     }
+
+
 
 }
