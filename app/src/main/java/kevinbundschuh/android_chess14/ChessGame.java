@@ -454,7 +454,7 @@ public class ChessGame extends AppCompatActivity {
     }
 
     /**
-     * onclick method called when the ai button is clicked
+     * onclick method called when the ai button is clicked. Looks through all and sees if there is a possible move to make.
      * @param view
      */
     public void aiListener(View view){

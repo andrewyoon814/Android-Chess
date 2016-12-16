@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -56,17 +57,17 @@ public class Replay_Game extends AppCompatActivity {
 
         String direction = history.get(count);
 
+        //seperate the direction by the comma delimiter
+        String[] split = direction.split(",");
+
         //set the from spot's image to transparent
-        int resID = getResources().getIdentifier(direction.substring(9,11), "id", getPackageName());
+        int resID = getResources().getIdentifier(split[2], "id", getPackageName());
         ImageView i = (ImageView) findViewById(resID);
         i.setImageResource(R.drawable.transparent);
 
         //set the to spot's image to corresponding image
-        setImage(direction.substring(0,5),direction.substring(6,8));
+        setImage(split[0],split[1]);
 
-//        Log.d("piece ", direction.substring(0,5));
-//        Log.d("from ", direction.substring(6,8));
-//        Log.d("to ", direction.substring(9,11));
 
     }
 
@@ -105,6 +106,7 @@ public class Replay_Game extends AppCompatActivity {
         }
 
         String direction = history.get(count);
+        Log.d("move", direction);
 
         //chck to see if this is the last move and print out result
         if(checkEndGame(direction)){
@@ -138,15 +140,16 @@ public class Replay_Game extends AppCompatActivity {
             return;
         }
 
-
+        //seperate the direction by the comma delimiter
+        String[] split = direction.split(",");
 
         //set the from spot's image to transparent
-        int resID = getResources().getIdentifier(direction.substring(6,8), "id", getPackageName());
+        int resID = getResources().getIdentifier(split[1], "id", getPackageName());
         ImageView i = (ImageView) findViewById(resID);
         i.setImageResource(R.drawable.transparent);
 
         //set the to spot's image to corresponding image
-        setImage(direction.substring(0,5),direction.substring(9,11));
+        setImage(split[0],split[2]);
 
         count++;
     }
