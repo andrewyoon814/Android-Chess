@@ -13,6 +13,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.EditText;
+
 
 
 import java.util.ArrayList;
@@ -34,8 +36,8 @@ public class ChessGame extends AppCompatActivity {
     public static String promotion = null;
     //public static Piece[][] board = game.board;
     public static boolean enPassant = false;
-    public static boolean promo = false;
     public Piece[][] saveBoard =game.board;
+    public static boolean promo = false;
 
     //requested move is filled in on click and previous move holds the information from the previous turn for the undo button.
     static MoveHolder requestedMove;
@@ -64,6 +66,8 @@ public class ChessGame extends AppCompatActivity {
         game.PrintBoard(game.board);
         //set the image button that was clicked
         ImageButton clicked = (ImageButton) view;
+        //final ImageButton pro = clicked;
+        final ImageView pro = (ImageView)findViewById(clicked.getId());
 
         //if it is the first click
         if(requestedMove.getClick() == 1){
@@ -187,6 +191,7 @@ public class ChessGame extends AppCompatActivity {
                 previousMove.setClick(requestedMove.getClick());
                 previousMove.setToTag(requestedMove.getToTag());
 
+                //sets the images correct if en passant is in effect
                 if(enPassant){
                     System.out.println(requestedMove.getTo());
                     String del= "";
@@ -203,7 +208,10 @@ public class ChessGame extends AppCompatActivity {
                     toDel.setImageResource(R.drawable.transparent);
                     toDel.setTag("empty");
                     toDel.setBackgroundColor(Color.TRANSPARENT);
+                    enPassant = false;
                 }
+
+                //sets the images correct if castling is in effect
                 if(castle){
                     String rookPos="";
                     String del = "";
@@ -211,7 +219,7 @@ public class ChessGame extends AppCompatActivity {
                     Point p1,p2;
                     p1=strToCoord(requestedMove.getTo());
                     p2=strToCoord(requestedMove.getFrom());
-                    dx = p2.getCol()-p1.getCol();
+                    dx = p1.getCol()-p2.getCol();
                     if(requestedMove.getPiece().charAt(0)=='w'){
                         if(dx == 3){
                             rookPos = "f7";
@@ -239,7 +247,87 @@ public class ChessGame extends AppCompatActivity {
                     int newRookPos = getResources().getIdentifier(rookPos, "id", getPackageName());
                     ImageView rook = (ImageView)findViewById(newRookPos);
 
+                    if(requestedMove.getPiece().charAt(0)=='w'){
+                        rook.setImageResource(R.drawable.wrook);
+                        rook.setTag("wrook");
+                    } else {
+                        rook.setImageResource(R.drawable.brook);
+                        rook.setTag("brook");
+                    }
 
+                    rook.setBackground(null);
+
+                    castle = false;
+
+
+                }
+
+                if(promo){
+                    final Point newloc = strToCoord(requestedMove.getTo());
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+                    alertDialogBuilder.setTitle("Pawn Promotion!");
+                    alertDialogBuilder.setMessage("Choose a piece (no Kings or Pawns)");
+                    final EditText txt = new EditText(this);
+                    alertDialogBuilder.setView(txt);
+                    alertDialogBuilder.setPositiveButton("Enter", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int button) {
+                                    String promotion = txt.getText().toString().toLowerCase();
+                                    Piece piece;
+                                    if(turn == 'b'){
+                                         piece = makePromotion(newloc, 'w', promotion);
+                                    } else {
+                                        piece = makePromotion(newloc, 'b', promotion);
+                                    }
+                                    game.board[newloc.getRow()][newloc.getCol()]= piece;
+                                    switch(promotion){
+                                        case "queen":
+                                            if(turn =='b'){
+                                                pro.setImageResource(R.drawable.wqueen);
+                                                pro.setTag("wqueen");
+                                            }else {
+                                                pro.setImageResource(R.drawable.bqueen);
+                                                pro.setTag("bqueen");
+                                            }
+                                            break;
+
+                                        case "bishop":
+                                            if(turn =='w') {
+                                                pro.setImageResource(R.drawable.wbishop);
+                                                pro.setTag("wbishop");
+                                            }
+                                            else {
+                                                pro.setImageResource(R.drawable.bbishop);
+                                                pro.setTag("bbishop");
+                                            }
+                                            break;
+
+                                        case "rook":
+                                            if(turn =='w') {
+                                                pro.setImageResource(R.drawable.wrook);
+                                                pro.setTag("wrook");
+                                            }
+                                            else {
+                                                pro.setImageResource(R.drawable.brook);
+                                                pro.setTag("brook");
+                                            }
+                                            break;
+
+                                        case "knight":
+                                            if(turn =='w') {
+                                                pro.setImageResource(R.drawable.whorse);
+                                                pro.setTag("whorse");
+                                            }
+                                            else {
+                                                pro.setImageResource(R.drawable.bhorse);
+                                                pro.setTag("bhorse");
+                                            }
+                                            break;
+                                    }
+                                }
+                            });
+
+                    alertDialogBuilder.create().show();
+                    promo = false;
                 }
 
                 //reset for future use
@@ -400,12 +488,6 @@ public class ChessGame extends AppCompatActivity {
             game.board[oldPt.getRow()][oldPt.getCol()] = game.board[newPt.getRow()][newPt.getCol()];
             game.board[newPt.getRow()][newPt.getCol()] = null;
 
-            //put back the game turn
-            if(game.turn == 'w'){
-                game.turn = 'b';
-            }else{
-                game.turn = 'w';
-            }
         }
     }
 
@@ -510,7 +592,7 @@ public class ChessGame extends AppCompatActivity {
     }
 
     /**
-     * onclick method called when the ai button is clicked. Looks through all and sees if there is a possible move to make.
+     * onclick method called when the ai button is clicked
      * @param view
      */
     public void aiListener(View view){
@@ -651,7 +733,7 @@ public class ChessGame extends AppCompatActivity {
 
                 break;
             case 'p':
-                boolean promo = false;
+                //boolean promo = false;
                 if(!selected.hasMoved)
                     selected = new Pawn(oldPt.getRow(),oldPt.getCol(), color);
                 int dx = newPt.getCol()-oldPt.getCol();
@@ -663,6 +745,17 @@ public class ChessGame extends AppCompatActivity {
                 }
 
                 valid = ((Pawn) selected).validMove(oldPt,newPt,empty);
+
+                //special case fix
+                if(oldPt.getRow()-1>-1&&oldPt.getRow()+1<8) {
+                    if (game.board[oldPt.getRow() - 1][oldPt.getCol()] != null)
+                        if (game.board[oldPt.getRow()][oldPt.getCol()].color == 'w' && game.board[oldPt.getRow() - 1][oldPt.getCol()].type == 'K')
+                            valid = false;
+                    if (game.board[oldPt.getRow() + 1][oldPt.getCol()] != null)
+                        if (game.board[oldPt.getRow()][oldPt.getCol()].color == 'b' && game.board[oldPt.getRow() + 1][oldPt.getCol()].type == 'K')
+                            valid = false;
+                }
+
                 if(checkEnPassant(newPt, selected))
                     enPassant=true;
                 if(game.board[newPt.getRow()][newPt.getCol()]!=null&&dx==0&&(dy==1||dy==-1||dy==2||dy==-2)){
@@ -688,9 +781,9 @@ public class ChessGame extends AppCompatActivity {
                             game.board[newPt.getRow() - 1][newPt.getCol()] = null;
                         }
                     }
-                    if(promo){
+                    /*if(promo){
                         selected = makePromotion(selected);
-                    }
+                    }*/
                     game.board[oldPt.getRow()][oldPt.getCol()] = null;
                     game.board[newPt.getRow()][newPt.getCol()] = selected;
                     if(inCheck()){
@@ -706,6 +799,8 @@ public class ChessGame extends AppCompatActivity {
                         selected.firstMove = false;
                     }
                 }
+                selected.hasMoved=true;
+                selected.firstMove=false;
                 break;
         }
         if(!valid && !castle){
@@ -770,34 +865,30 @@ public class ChessGame extends AppCompatActivity {
     /**
      * if a pawn is to be promoted, this sets the pawn to the proper piece according to user input
      *
-     * @param piece - pawn to be promoted
+     * @param point, color - pawn to be promoted
      * @return promoted piece - piece the pawn is to be promoted to
      * @author kevin bundschuh
      */
-    public static Piece makePromotion(Piece piece){
+    public static Piece makePromotion(Point point, char color, String p){
         Piece temp;
-        if(promotion == null){
-            temp = new Queen(piece.row,piece.col,piece.color);
+        if(p == null){
+            temp = new Queen(point.getRow(),point.getCol(),color);
         } else {
-            switch (promotion) {
-                case "q":
-                case "Q":
-                    temp = new Queen(piece.row, piece.col, piece.color);
+            switch (p) {
+                case "queen":
+                    temp = new Queen(point.getRow(), point.getRow(), color);
                     break;
-                case "r":
-                case "R":
-                    temp = new Rook(piece.row, piece.col, piece.color);
+                case "rook":
+                    temp = new Rook(point.getRow(), point.getCol(), color);
                     break;
-                case "b":
-                case "B":
-                    temp = new Bishop(piece.row, piece.col, piece.color);
+                case "bishop":
+                    temp = new Bishop(point.getRow(), point.getCol(), color);
                     break;
-                case "n":
-                case "N":
-                    temp = new Knight(piece.row, piece.col, piece.color);
+                case "knight":
+                    temp = new Knight(point.getRow(), point.getCol(), color);
                     break;
                 default:
-                    temp = new Queen(piece.row, piece.col, piece.color);
+                    temp = new Queen(point.getRow(), point.getCol(), color);
                     break;
             }
         }
@@ -819,6 +910,7 @@ public class ChessGame extends AppCompatActivity {
         int dx = newPt.getCol()-oldPt.getCol();
         if(king.type =='K'&&king.hasMoved==false&&king.color=='b'){
             if(dx==3){
+                //System.out.println("in dx ")
                 if(game.board[0][7]!=null&&game.board[0][7].type=='R'&&game.board[0][7].color=='b'
                         &&game.board[0][7].hasMoved==false&&game.clearPath(oldPt,newPt)){
                     game.board[0][7]=null;
@@ -974,6 +1066,10 @@ public class ChessGame extends AppCompatActivity {
                             }
                         }else if(game.board[row][col].type =='p'){
                             if(((Pawn) game.board[row][col]).validMove(temp, kingLoc, true)){
+                                if(game.board[row][col].color =='w'&&game.board[row-1][col].type=='K')
+                                    return false;
+                                if(game.board[row][col].color =='b'&&game.board[row+1][col].type=='K')
+                                    return false;
                                 if(game.clearPath(temp, kingLoc)){
                                     return true;
                                 }
@@ -986,26 +1082,8 @@ public class ChessGame extends AppCompatActivity {
         return false;
     }
 
-    /*public static void redrawEnPassant(View view){
-        ImageButton clicked = (ImageButton) view;
-        System.out.println(requestedMove.getTo());
-        Point pieceToDel = strToCoord(requestedMove.getTo());
-        if(requestedMove.getPiece().charAt(0)=='w'){
-            pieceToDel.setRow(pieceToDel.getRow()-1);
-        } else
-            pieceToDel.setRow(pieceToDel.getRow()+1);
 
-        ImageView toDel =(ImageView)findViewById(requestedMove.getPieceId());
 
-        clicked.setImageResource(R.drawable.transparent);
-        clicked.setTag("empty");
-        clicked.setBackgroundColor(Color.TRANSPARENT);
-    }*/
-
-    public void redrawCastle(Point point, Piece [][] board){
-
-        String str = ""+point.getRow() + point.getCol();
-    }
 
     public void redrawPromo(Point point, Piece [][] board){
 
@@ -1070,66 +1148,6 @@ public class ChessGame extends AppCompatActivity {
         return temp;
     }
 
-    public static String pointToCoord(Point point){
-        String temp = "";
-        System.out.println(point.getRow());
-        System.out.println(point.getCol());
-        switch (point.getCol()) {
-            case '0':
-                temp = temp+"a";
-                break;
-            case '1':
-                temp = temp+"b";
-                break;
-            case '2':
-                temp = temp+"c";
-                break;
-            case '3':
-                temp=temp+"d";
-                break;
-            case '4':
-                temp=temp+"e";
-                break;
-            case '5':
-                temp=temp+"f";
-                break;
-            case '6':
-                temp=temp+"g";
-                break;
-            case '7':
-                temp=temp+"h";
-                break;
-        }
-        switch (point.getRow()) {
-            case '0':
-                temp=temp+"0";
-                break;
-            case '1':
-                temp=temp+"1";
-                break;
-            case '2':
-                temp=temp+"2";
-                break;
-            case '3':
-                temp=temp+"3";
-                break;
-            case '4':
-                temp=temp+"4";
-                break;
-            case '5':
-                temp=temp+"5";
-                break;
-            case '6':
-                temp=temp+"6";
-                break;
-            case '7':
-                temp=temp+"7";
-                break;
-
-        }
-        System.out.println("temp is "+temp);
-        return temp;
-    }
 
 
 

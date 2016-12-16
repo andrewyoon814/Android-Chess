@@ -66,11 +66,10 @@ public class Pawn extends Piece implements PieceInterface{
 		}
 
 		//need to handle moving double from original spot. maybe a piece move count?
-		if((y==2||y==-2) && x ==0){
+		if((y==2||y==-2) && x ==0 && firstMove){
 			return true;
 		}
-
-		return false;
+			return false;
 	}
 
 	public boolean aivalidMove(Point oldloc, Point newloc, boolean emptySpace) {
