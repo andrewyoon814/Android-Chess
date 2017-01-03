@@ -1,6 +1,6 @@
 package model;
 
-import kevinbundschuh.android_chess14.Point;
+import andrewyoon.android_chess14.Point;
 
 
 /**

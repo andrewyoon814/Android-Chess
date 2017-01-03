@@ -1,7 +1,7 @@
 package model;
 
 //import chess.Game;
-import kevinbundschuh.android_chess14.Point;
+import andrewyoon.android_chess14.Point;
 
 /**
  * This class represents the Pawn.

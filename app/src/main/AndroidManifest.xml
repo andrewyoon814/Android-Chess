@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="kevinbundschuh.android_chess14">
+    package="andrewyoon.android_chess14">
 
     <application
         android:allowBackup="true"
@@ -8,17 +8,17 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name="andrewyoon.android_chess14.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SaveGame" />
-        <activity android:name=".ChessGame" />
-        <activity android:name=".List_Games" />
-        <activity android:name=".Replay_Game"></activity>
+        <activity android:name="andrewyoon.android_chess14.SaveGame" />
+        <activity android:name="andrewyoon.android_chess14.ChessGame" />
+        <activity android:name="andrewyoon.android_chess14.List_Games" />
+        <activity android:name="andrewyoon.android_chess14.Replay_Game"></activity>
     </application>
 
 </manifest>

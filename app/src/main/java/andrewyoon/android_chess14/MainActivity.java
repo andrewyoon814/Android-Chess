@@ -1,4 +1,4 @@
-package kevinbundschuh.android_chess14;
+package andrewyoon.android_chess14;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;

@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="kevinbundschuh.android_chess14.List_Games">
+    tools:context="andrewyoon.android_chess14.List_Games">
 
     <TextView
         android:text="Click To Replay Saved Games!"
